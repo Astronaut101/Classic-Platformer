@@ -8,17 +8,17 @@
 import random
 
 level_map = [
-'                   '  # row 0
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
-'                   '
+'                   ',  # row 0
+'                   ',
+'                   ',
+'                   ',
+'                   ',
+'xx  xxx    xx  xxxx',
+'xx      xx  xx  xxx',
+'xxxx    xxx   xxxxx',
+'xxxxxx  xxxxx    xx',
+'xxx    xx xxxxxxx  ',
+'xxx  xxx  xxxxxxx  ',
 ]
 
 tile_size = 64  # in pixels dimensions (64px)
