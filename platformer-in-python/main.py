@@ -1,5 +1,6 @@
-import pygame
 import sys
+
+import pygame
 
 from levels import Level
 from settings import level_map

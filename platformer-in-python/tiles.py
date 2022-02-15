@@ -1,5 +1,6 @@
 import pygame
 
+
 class Tile(pygame.sprite.Sprite):
     
     def __init__(self, pos, size):
@@ -12,4 +13,8 @@ class Tile(pygame.sprite.Sprite):
 
         ## Fetching rectangle object has the dimensions of the image.
         ## Update the positions of this object by setting the values of rect.x and rect.y
-        self.rect = self.image.get_rect(topleft=(pos, pos))
+        self.rect = self.image.get_rect(topleft=(pos))
+        
+    def update(self, x_shift):
+        """Responsible for moving the group of tiles left or right"""
+        self.rect.x += x_shift
