@@ -11,7 +11,8 @@
 
 * [x] 🎞 Setting up The Levels
 * [x] 📸 Camera
-* [ ] 🏃‍♂️ Designing Player Gravity and Jump (TBC)
-* [ ] 💥 Collisions
-* [ ] 🤹‍♀️ Animation States
+* [x] 🏃‍♂️ Designing Player Gravity and Jump
+* [x] 💥 Collisions
+* [x] 🖼 Loading Sprite assets and animating the player
+* [ ] 🤹‍♀️ Animation States (TBC)
 * [ ] ✨ Particle Effects

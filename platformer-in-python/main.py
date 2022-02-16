@@ -5,7 +5,6 @@ import pygame
 from levels import Level
 from settings import level_map
 from settings import screen_height, screen_width
-from tiles import Tile
 
 # Initializing game level variables
 screen_width = 1200

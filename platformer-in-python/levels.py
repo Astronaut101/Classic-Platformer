@@ -46,13 +46,38 @@ class Level:
             self.world_shift = 0
             player.speed = 8
 
-    def run(self):
+    def horizontal_movement_collision(self):
+        player = self.player.sprite
+        player.rect.x += player.direction.x * player.speed
+
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.x < 0:
+                    player.rect.left = sprite.rect.right
+                elif player.direction.x > 0:
+                    player.rect.right = sprite.rect.left
+
+    def vertical_movement_collision(self):
+        player = self.player.sprite
+        player.apply_gravity()
         
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.y < 0:
+                    player.rect.top = sprite.rect.bottom
+                    player.direction.y = 0  # When we hit a ceiling when we press jump, this would be able to cancel out the force applied upward.
+                elif player.direction.y > 0:
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0  # When we hit a floor, this would help stay the player sprite on top of the tile.
+
+    def run(self):
         # Level Tiles
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
+        self.scroll_x()
         
         # Player Object
         self.player.update()
+        self.horizontal_movement_collision()
+        self.vertical_movement_collision()
         self.player.draw(self.display_surface)
-        self.scroll_x()
