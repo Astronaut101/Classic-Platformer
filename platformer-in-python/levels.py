@@ -4,6 +4,7 @@ from player import Player
 from settings import tile_size
 from settings import screen_width
 from tiles import Tile
+from particles import ParticleEffect
 
 class Level:
 
@@ -13,6 +14,34 @@ class Level:
         
         # The more positive the update number (moves to the right) and vice-versa.
         self.world_shift = 0
+        self.current_x = 0
+
+        # Dust Particle
+        self.dust_sprite = pygame.sprite.GroupSingle()
+        self.player_on_ground = False
+
+    def create_jump_articles(self, pos):
+        if self.player.sprite.facing_right:
+            pos -= pygame.math.Vector2(10,5)
+        else:
+            pos += pygame.math.Vector2(10,-5)
+        jump_particle_sprite = ParticleEffect(pos, 'Jump')
+        self.dust_sprite.add(jump_particle_sprite)
+
+    def get_player_on_ground(self):
+        if self.player.sprite.on_ground:
+            self.player_on_ground = True
+        else:
+            self.player_on_ground = False
+
+    def create_landing_dust(self):
+        if not self.player_on_ground and self.player.sprite.on_ground and not self.dust_sprite.sprites():
+            if self.player.sprite.facing_right:
+                offset = pygame.math.Vector2(10,15)
+            else:
+                offset = pygame.math.Vector2(-10,15)
+            fall_dust_particle = ParticleEffect(self.player.sprite.rect.midbottom - offset, "Fall")
+            self.dust_sprite.add(fall_dust_particle)
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
@@ -28,7 +57,7 @@ class Level:
                     tile = Tile((x, y), tile_size)
                     self.tiles.add(tile)
                 if cell == "P":
-                    player_pos = Player((x,y))
+                    player_pos = Player((x,y), self.display_surface, self.create_jump_articles)
                     self.player.add(player_pos)
 
     def scroll_x(self):
@@ -54,8 +83,18 @@ class Level:
             if sprite.rect.colliderect(player.rect):
                 if player.direction.x < 0:
                     player.rect.left = sprite.rect.right
+                    player.on_left = True
+                    self.current_x = player.rect.left
                 elif player.direction.x > 0:
                     player.rect.right = sprite.rect.left
+                    player.on_right = True
+                    self.current_x = player.rect.right
+
+            if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
+                player.on_left = False
+            
+            if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
+                player.on_right = False
 
     def vertical_movement_collision(self):
         player = self.player.sprite
@@ -66,18 +105,32 @@ class Level:
                 if player.direction.y < 0:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0  # When we hit a ceiling when we press jump, this would be able to cancel out the force applied upward.
+                    player.on_ceiling = True
                 elif player.direction.y > 0:
                     player.rect.bottom = sprite.rect.top
                     player.direction.y = 0  # When we hit a floor, this would help stay the player sprite on top of the tile.
+                    player.on_ground = True
+
+            if player.on_ground and player.direction.y < 0 or player.direction.y > 1:
+                player.on_ground = False
+            
+            if player.on_ceiling and player.direction.y > 0:
+                player.on_ceiling = False
 
     def run(self):
+        # Dust particles
+        self.dust_sprite.update(self.world_shift)
+        self.dust_sprite.draw(self.display_surface)
+        
         # Level Tiles
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
         self.scroll_x()
-        
+
         # Player Object
         self.player.update()
         self.horizontal_movement_collision()
+        self.get_player_on_ground()
         self.vertical_movement_collision()
+        self.create_landing_dust()
         self.player.draw(self.display_surface)
