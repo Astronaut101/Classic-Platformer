@@ -14,5 +14,9 @@
 * [x] 🏃‍♂️ Designing Player Gravity and Jump
 * [x] 💥 Collisions
 * [x] 🖼 Loading Sprite assets and animating the player
-* [ ] 🤹‍♀️ Animation States (TBC)
-* [ ] ✨ Particle Effects
+* [x] 🤹‍♀️ Animation States (TBC)
+* [x] ✨ Particle Effects
+
+## PART 2 PyGame with a Visual Level Editor
+
+* [ ] - Working with our level map (using 32px x 32px size)

@@ -35,10 +35,11 @@ class Level:
             self.player_on_ground = False
 
     def create_landing_dust(self):
+        # In order to prevent the landing dust particle animation to playing multiple times
         if not self.player_on_ground and self.player.sprite.on_ground and not self.dust_sprite.sprites():
             if self.player.sprite.facing_right:
                 offset = pygame.math.Vector2(10,15)
-            else:
+            elif self.player.sprite.facing_left:
                 offset = pygame.math.Vector2(-10,15)
             fall_dust_particle = ParticleEffect(self.player.sprite.rect.midbottom - offset, "Fall")
             self.dust_sprite.add(fall_dust_particle)
